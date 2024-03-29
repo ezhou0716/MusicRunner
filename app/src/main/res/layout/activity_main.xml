@@ -27,9 +27,11 @@
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_view"
-        android:layout_below="@+id/songs_text" />
+        android:layout_below="@+id/songs_text"
+        android:layout_marginTop="10dp"/>
+
 
 </RelativeLayout>
