@@ -5,7 +5,12 @@
     <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="true" />
     <uses-feature android:name="android.hardware.sensor.stepdetector" android:required="true" />
 
+
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" tools:node="replace"/>
+    <!-->for Android 13 -->
+    <!--> For android 10
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="replace"/> -->
+
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" tools:node="replace"/>
 
     <application
