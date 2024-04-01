@@ -10,28 +10,48 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/songs_text"
+        android:id="@+id/patterns_text"
         android:textColor="@color/black"
-        android:text="SONGS"
+        android:text="Select a running pattern"
         android:textSize="20dp"
         android:textStyle="bold"
         android:padding="30dp"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/no_songs_text"
-        android:text="NO SONGS FOUND"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="120dp"
+        android:id="@+id/pattern1"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:layout_below="@id/patterns_text"
+        android:src="@drawable/pattern1"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/songs_text"
-        android:layout_marginTop="10dp"/>
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="120dp"
+        android:id="@+id/pattern2"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:layout_below="@id/pattern1"
+        android:src="@drawable/pattern2"/>
 
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="120dp"
+        android:id="@+id/pattern3"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:layout_below="@id/pattern2"
+        android:src="@drawable/pattern3"/>
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="120dp"
+        android:id="@+id/pattern4"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:layout_below="@id/pattern3"
+        android:src="@drawable/pattern4"/>
 
 </RelativeLayout>
