@@ -9,13 +9,14 @@
         android:name="android.hardware.sensor.stepdetector"
         android:required="true" />
     <!--
- for android 13
+ for android 13-->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" tools:node="replace"/>
-    -->
-    <!-- for android 10 -->
+
+    <!-- for android 10
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:node="replace" />
+       -->
     <uses-permission
         android:name="android.permission.ACTIVITY_RECOGNITION"
         tools:node="replace" />

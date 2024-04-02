@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     boolean checkAudioPermission() {
         // android 13
-        // int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_MEDIA_AUDIO);
-        int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_MEDIA_AUDIO);
+        //int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     void requestAudioPermission() {
-        /** ANDROID 13
+        /** ANDROID 13*/
         if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.READ_MEDIA_AUDIO)){
             Log.w("<><><>", "shouldShowRequestPermissionRationale...");
             Toast.makeText(MainActivity.this,"READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTINGS",Toast.LENGTH_SHORT).show();
@@ -88,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
             Log.w("<><><>", "Requesting permission...");
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{ android.Manifest.permission.READ_MEDIA_AUDIO}, 1);
         }
-         */
+
 
         // android 10
+        /**
         if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Log.w("<><><>", "shouldShowRequestPermissionRationale...");
             Toast.makeText(MainActivity.this,"READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTINGS",Toast.LENGTH_SHORT).show();
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             Log.w("<><><>", "Requesting permission...");
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{ android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
+         */
     }
 
     private void runPattern(int pid){
