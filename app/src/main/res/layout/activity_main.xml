@@ -19,8 +19,8 @@
         android:layout_centerHorizontal="true" />
 
     <ImageView
-        android:layout_width="240dp"
-        android:layout_height="120dp"
+        android:layout_width="340dp"
+        android:layout_height="270dp"
         android:id="@+id/pattern1"
         android:layout_centerHorizontal="true"
         android:padding="20dp"
