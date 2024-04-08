@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runPattern(int pid){
-        Log.w("<><><>", "In runPattern with pid: " + pid);
+        Log.w("<><><>", "In runPattern with pi: " + pid);
 
         Intent intent = new Intent(getApplicationContext(), MusicListActivity.class);
         intent.putExtra("PATTERN_ID",pid);  //  to indicate which pattern is invoked
