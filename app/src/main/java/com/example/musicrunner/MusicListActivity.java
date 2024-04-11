@@ -40,7 +40,14 @@ public class MusicListActivity extends AppCompatActivity {
         Log.w("<><><>", "in onCreate of main activity ");
 
         int pid = (Integer) getIntent().getSerializableExtra("PATTERN_ID");
+        int speed = (Integer) getIntent().getSerializableExtra("SPEED");
+        int distance = (Integer) getIntent().getSerializableExtra("DISTANCE");
+
         Log.w("<><><>", "Pattern id: " + pid);
+        Log.w("<><><>", "Speed: " + speed);
+        Log.w("<><><>", "Distance: " + distance);
+
+        // TODO: Generate play list based on pattern, speed, and distance.
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -32,10 +32,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
     TextView titleTv,currentTimeTv,totalTimeTv;
     SeekBar seekBar;
     ImageView pausePlay,nextBtn,previousBtn,musicIcon;
-    TextView stepCountTv, paceTv;
+    //TextView stepCountTv;
+    TextView paceTv, speedTv;
 
     private SensorManager sensorManager;
     private Sensor stepCounterSensor;
+
+    final static float FEET_PER_STEP = 2.5f; // THIS IS AN AVERAGE
 
     static private int initialCount = -1;
     static private int stepCount = 0;
@@ -72,8 +75,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         nextBtn = findViewById(R.id.next);
         previousBtn = findViewById(R.id.previous);
         musicIcon = findViewById(R.id.music_icon_big);
-        stepCountTv = findViewById(R.id.step_count);
+        //stepCountTv = findViewById(R.id.step_count);
         paceTv = findViewById(R.id.pace);
+        speedTv = findViewById(R.id.e_speed);
 
         titleTv.setSelected(true);
 
@@ -87,7 +91,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         if (stepCounterSensor == null) {
-            stepCountTv.setText("Step Counter not available");
+            //stepCountTv.setText("Step Counter not available");
+            paceTv.setText("Step Counter not available");
         }
 
         songsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
@@ -146,8 +151,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         nextBtn.setOnClickListener(v-> playNextSong());
         previousBtn.setOnClickListener(v-> playPreviousSong());
 
-        stepCountTv.setText("Steps: " + stepCount);
+        //stepCountTv.setText("Steps: " + stepCount);
         paceTv.setText(String.format(java.util.Locale.US, "Pace: %.1f s/min", currentPace));
+
+        float speed = currentPace * 60 * FEET_PER_STEP / 5280.0f;
+        speedTv.setText(String.format(java.util.Locale.US, "Speed: %.1f mph", speed));
 
         playMusic();
 
@@ -244,7 +252,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
             stepCount = totalStepSinceReboot - initialCount;
             Log.i("<><><>", "New step count: " + stepCount);
 
-            stepCountTv.setText("Steps: " + stepCount);
+            //stepCountTv.setText("Steps: " + stepCount);
 
             // we do not calculate for every steps. Instead, we calcuate every 5 times the sensor is triggered to even out the variations.
             if (calculatedCount % 10 == 0 ) {
@@ -259,6 +267,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
                     currentPace = (stepCount - prevCount) * 60000.0f / (currentTime - previousTime);
 
                     paceTv.setText(String.format(java.util.Locale.US, "Pace: %.1f s/min", currentPace));
+
+                    float speed = currentPace * 60 * FEET_PER_STEP / 5280.0f;
+                    speedTv.setText(String.format(java.util.Locale.US, "Speed: %.1f mph", speed));
 
                     previousTime = currentTime;
 

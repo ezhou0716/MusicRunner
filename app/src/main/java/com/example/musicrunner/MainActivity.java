@@ -52,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
         pattern3 = findViewById(R.id.pattern3);
         pattern4 = findViewById(R.id.pattern4);
 
-        if(!checkAudioPermission()){
+        if (!checkAudioPermission()) {
             Log.w("<><><>", "About to request Permission.... ");
             requestAudioPermission();
             return;
         }
 
-        pattern1.setOnClickListener(v-> runPattern(1));
-        pattern2.setOnClickListener(v-> runPattern(2));
-        pattern3.setOnClickListener(v-> runPattern(3));
-        pattern4.setOnClickListener(v-> runPattern(4));
+        pattern1.setOnClickListener(v -> runPattern(1));
+        pattern2.setOnClickListener(v -> runPattern(2));
+        pattern3.setOnClickListener(v -> runPattern(3));
+        pattern4.setOnClickListener(v -> runPattern(4));
 
-        // TODO more patterns to be added
+        //TODO more patterns to be added
 
     }
 
@@ -73,25 +73,23 @@ public class MainActivity extends AppCompatActivity {
         //int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
+
     void requestAudioPermission() {
-        /** ANDROID 13*/
-        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.READ_MEDIA_AUDIO)){
+        /* ANDROID 13*/
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.READ_MEDIA_AUDIO)) {
             Log.w("<><><>", "shouldShowRequestPermissionRationale...");
-            Toast.makeText(MainActivity.this,"READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTINGS",Toast.LENGTH_SHORT).show();
-        }
-        else {
+            Toast.makeText(MainActivity.this, "READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTINGS", Toast.LENGTH_SHORT).show();
+        } else {
             Log.w("<><><>", "Requesting permission...");
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{ android.Manifest.permission.READ_MEDIA_AUDIO}, 1);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.READ_MEDIA_AUDIO}, 1);
         }
 
 
-        // android 10
-        /**
+        /* android 10
         if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Log.w("<><><>", "shouldShowRequestPermissionRationale...");
             Toast.makeText(MainActivity.this,"READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTINGS",Toast.LENGTH_SHORT).show();
@@ -103,11 +101,12 @@ public class MainActivity extends AppCompatActivity {
          */
     }
 
-    private void runPattern(int pid){
+    private void runPattern(int pid) {
         Log.w("<><><>", "In runPattern with pid: " + pid);
 
-        Intent intent = new Intent(getApplicationContext(), MusicListActivity.class);
-        intent.putExtra("PATTERN_ID",pid);  //  to indicate which pattern is invoked
+//        Intent intent = new Intent(getApplicationContext(), MusicListActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlotActivity.class);
+        intent.putExtra("PATTERN_ID", pid);  //  to indicate which pattern is invoked
         startActivity(intent);
     }
 

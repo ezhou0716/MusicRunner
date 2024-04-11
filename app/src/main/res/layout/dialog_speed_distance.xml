@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/dialog_speed_distance">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/settings_title"
+        android:textColor="@color/black"
+        android:text="Set Speed and Distance"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="30dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/target_speed"
+        android:text="Avg Speed (M/h)"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/settings_title"
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/target_distance"
+        android:text="Distance (miles)"
+        android:layout_toEndOf="@+id/target_speed"
+        android:textColor="@color/black"
+        android:layout_marginStart="40dp"
+        android:layout_alignBaseline="@+id/target_speed"
+        android:layout_alignBottom="@+id/target_speed"
+        />
+
+    <NumberPicker
+        android:id="@+id/speedPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/target_speed"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="20dp"
+        />
+
+    <NumberPicker
+        android:id="@+id/distancePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/speedPicker"
+        android:layout_alignTop="@+id/speedPicker"
+        android:layout_alignBaseline="@+id/speedPicker"
+        android:layout_alignBottom="@+id/speedPicker"
+        android:layout_marginStart="40dp"
+        />
+
+    <Button
+        android:id="@+id/b_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/speedPicker"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="40dp"
+        android:text="Set" />
+
+    <Button
+        android:id="@+id/b_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/b_set"
+        android:layout_alignBottom="@+id/b_set"
+        android:layout_toEndOf="@+id/b_set"
+        android:layout_marginStart="40dp"
+        android:text="Cancel" />
+
+</RelativeLayout>
