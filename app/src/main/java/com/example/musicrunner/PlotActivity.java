@@ -42,7 +42,7 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
 
     private static Dialog dialog;
 
-    private static int speed = 6;
+    private static int speed = 7;
     private static int distance = 5;
 
     private static int pid;
@@ -101,43 +101,54 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
         speedTv.setText("Avg Speed: " + speed + " (mph)");
         distanceTv.setText("Distance: " + distance + " (miles)");
 
-        // TODO: Given pattent id, speed and distance, calculated the X-Axle (Domain) and Y-Axle (Range) for the plot
-        // create a couple arrays of y-values to plot:
-        // Number[] domainLabels = {0, 1, 2, 3, 4, 5, 6};
-        Number[] domainLabels = new Number[distance+1];
-        Number[] series1Numbers = new Number[distance+1];
-        Double maxSpeed = 0.0, minSpeed=30.0;
-        for (int i = 0 ; i <= distance ; i ++) {
+        float minutes = distance * 60.0f / speed;
+
+        // Given pattent id, speed and distance, calculated the X-Axle (Domain) and Y-Axle (Range) for the plot
+
+        int numberMin = (int)Math.ceil(minutes);
+        Number[] domainLabels = new Number[numberMin+1];
+        for (int i = 0 ; i <= numberMin ; i ++) {
             domainLabels[i] = i;
-            // TODO: calculate the speed
-            series1Numbers[i] = (Math.random() - 0.5) * 3 + speed; //
-            if (series1Numbers[i].doubleValue() > maxSpeed) {
-                maxSpeed = series1Numbers[i].doubleValue();
-            }
-            else if (series1Numbers[i].doubleValue() < minSpeed) {
-                minSpeed = series1Numbers[i].doubleValue();
-            }
         }
 
-        //Number[] series1Numbers = {5.0, 5.2, 6.0, 6.0, 6.5, 6.0, 5.0};
+        Number[] xVals;
+        Number[] yVals;
+        XYSeries series = null;
 
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Distance");
+        Double maxSpeed = 0.0, minSpeed = 30.0;
+
+        if (pid == 1) {
+            // For pattern 1,
+            //  t = 0.1 T,  v = 1.020 * V
+            //  t = 0.2 T,  v = 1.020 * V
+            //  t = 0.4 T,  v = 0.999 * V
+            //  t = 0.6 t,  v = 0.993 * V
+            //  t = 0.8 t,  v = 0.985 * V
+            //  t = 1.0 t,  v = 1.024 * V
+            xVals = new Number [] {0.1 * minutes, 0.2 * minutes, 0.4 * minutes, 0.6 * minutes, 0.8 * minutes, 1.0 * minutes};
+            yVals = new Number [] {1.02 * speed, 1.02 * speed, 0.999 * speed, 0.993 * speed, 0.985 * speed, 1.024 * speed};
+            series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "my series");
+
+            maxSpeed = 1.024 * speed;
+            minSpeed = 0.993 * speed;
+        }
+        // TODO have more patterns
 
         LineAndPointFormatter series1Format =
                 new LineAndPointFormatter(Color.RED, Color.GREEN, null, null);
-        //new LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels);
 
         series1Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
 
         plot.clear();
 
-        plot.addSeries(series1, series1Format);
+        plot.addSeries(series, series1Format);
 
-        plot.setRangeBoundaries(Math.floor(minSpeed), Math.ceil(maxSpeed), BoundaryMode.FIXED);
+        plot.setRangeBoundaries(Math.max(minSpeed-0.5, 0), maxSpeed+0.5, BoundaryMode.FIXED);
 
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 1);
+        plot.setDomainBoundaries(0, numberMin, BoundaryMode.FIXED);
+        // Adjust the step dynamically
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, Math.ceil(minutes/10));
 
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
