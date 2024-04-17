@@ -108,6 +108,18 @@ public class MusicListActivity extends AppCompatActivity {
 
         }
         else {
+            Log.w("<><><>", "this song does not exists: /MyMusic/Samples/m5.m4a");
+        }
+        path=rootPath + "/MyMusic/Samples/m5.m4a";
+        file = new File(path);
+        if(file.exists()) {
+            Log.w("<><><>", "this song exists: /MyMusic/Samples/m4.m4a");
+
+            AudioModel songData = new AudioModel(path, "m4", "180000", 160, 220); // duration will be reset
+            songsList.add(songData);
+
+        }
+        else {
             Log.w("<><><>", "this song does not exists: /MyMusic/Samples/m4.m4a");
         }
 

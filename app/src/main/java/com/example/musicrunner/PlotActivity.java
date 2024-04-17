@@ -132,7 +132,21 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
             maxSpeed = 1.024 * speed;
             minSpeed = 0.993 * speed;
         }
-        // TODO have more patterns
+        if (pid == 2) {
+            // For pattern 2,
+            //  t = 0.1 T,  v = 0.915 * V
+            //  t = 0.2 T,  v = .9365 * V
+            //  t = 0.4 T,  v = 0.9795 * V
+            //  t = 0.6 t,  v = 1.0764 * V
+            //  t = 0.8 t,  v = 1.0441 * V
+            //  t = 1.0 t,  v = 1.0118 * V
+            xVals = new Number [] {0.1 * minutes, 0.2 * minutes, 0.4 * minutes, 0.6 * minutes, 0.8 * minutes, 1.0 * minutes};
+            yVals = new Number [] {0.915 * speed, .9365 * speed, 0.9795 * speed, 1.0764 * speed, 1.0441 * speed, 1.0118 * speed};
+            series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "my series");
+
+            maxSpeed = 1.0764 * speed;
+            minSpeed = 0.915 * speed;
+        }
 
         LineAndPointFormatter series1Format =
                 new LineAndPointFormatter(Color.RED, Color.GREEN, null, null);
