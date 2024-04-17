@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#EFEFEF"
+    android:background="@color/black"
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
@@ -27,6 +27,6 @@
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="Music"
-        android:textColor="@color/black"/>
+        android:textColor="#ECAB68"/>
 
 </RelativeLayout>
