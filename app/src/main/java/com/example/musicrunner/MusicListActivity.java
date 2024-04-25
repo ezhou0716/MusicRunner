@@ -59,7 +59,7 @@ public class MusicListActivity extends AppCompatActivity {
         Log.w("<><><>", "external storage directory: " + Environment.getExternalStorageDirectory().getAbsolutePath());
         String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        String path=rootPath + "/MyMusic/Samples/m1.m4a";
+        String path=rootPath + "/MyMusic/Samples/m1.m4a"; //Should change to raw file location?
         File file = new File(path);
         if(file.exists()) {
             Log.w("<><><>", "this song exists: /MyMusic/Samples/m1.m4a");
