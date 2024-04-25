@@ -147,6 +147,36 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
             maxSpeed = 1.0764 * speed;
             minSpeed = 0.915 * speed;
         }
+        if (pid == 3) {
+            // For pattern 3,
+            //  t = 0.1 T,  v = 1.077 * V
+            //  t = 0.2 T,  v = 1.0497 * V
+            //  t = 0.4 T,  v = 1.005 * V
+            //  t = 0.6 t,  v = 0.9724 * V
+            //  t = 0.8 t,  v = 0.9503 * V
+            //  t = 1.0 t,  v = 0.9392 * V
+            xVals = new Number [] {0.1 * minutes, 0.2 * minutes, 0.4 * minutes, 0.6 * minutes, 0.8 * minutes, 1.0 * minutes};
+            yVals = new Number [] {1.077 * speed, 1.0497 * speed, 1.0055 * speed, 0.9724 * speed, 0.9503 * speed, 0.9392 * speed};
+            series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "my series");
+
+            maxSpeed = 1.0764 * speed;
+            minSpeed = 0.915 * speed;
+        }
+        if (pid == 4) {
+            // For pattern 4,
+            //  t = 0.1 T,  v = 0.9392 * V
+            //  t = 0.2 T,  v = 0.9503 * V
+            //  t = 0.4 T,  v = 1.005 * V
+            //  t = 0.6 t,  v = 0.9724 * V
+            //  t = 0.8 t,  v = 1.0497 * V
+            //  t = 1.0 t,  v = 1.077 * V
+            xVals = new Number [] {0.1 * minutes, 0.2 * minutes, 0.4 * minutes, 0.6 * minutes, 0.8 * minutes, 1.0 * minutes};
+            yVals = new Number [] {0.9392 * speed, 0.9503 * speed, .9724 * speed, 1.0055 * speed, 1.0497 * speed, 1.077 * speed};
+            series = new SimpleXYSeries(Arrays.asList(xVals), Arrays.asList(yVals), "my series");
+
+            maxSpeed = 1.0764 * speed;
+            minSpeed = 0.915 * speed;
+        }
 
         LineAndPointFormatter series1Format =
                 new LineAndPointFormatter(Color.RED, Color.GREEN, null, null);
