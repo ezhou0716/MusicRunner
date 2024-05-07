@@ -14,7 +14,7 @@
         android:text="Title of the song"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:textColor="@color/white"
+        android:textColor="#ECAB68"
         android:textSize="20dp"
         android:layout_margin="20dp"
         android:padding="20dp"
@@ -51,7 +51,7 @@
             android:layout_below="@id/seek_bar"
             android:text="0:00"
             android:layout_alignParentStart="true"
-            android:textColor="@color/white"
+            android:textColor="#436E99"
             android:layout_margin="20dp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
             android:id="@+id/total_time"
             android:text="0:00"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/white"
+            android:textColor="#436E99"
             android:layout_margin="20dp"/>
 
         <RelativeLayout
@@ -112,7 +112,7 @@
             android:layout_below="@id/player_controls"
             android:text="Speed: 0 mph"
             android:layout_alignParentStart="true"
-            android:textColor="@color/white"
+            android:textColor="#ECAB68"
             android:layout_margin="20dp"/>
 
         <TextView
@@ -122,7 +122,7 @@
             android:id="@+id/pace"
             android:text="Pace: 0 s/min"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/white"
+            android:textColor="#ECAB68"
             android:layout_margin="20dp"/>
 
 
