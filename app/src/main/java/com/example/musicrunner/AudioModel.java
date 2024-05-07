@@ -5,21 +5,25 @@ import java.io.Serializable;
 public class AudioModel implements Serializable {
     String path;
     String title;
-    String duration;
+    int duration;
 
 
     int paceLow;
     int paceHigh;
 
 
-    public AudioModel(String path, String title, String duration, int paceLow, int paceHigh) {
+    public AudioModel(String path, String title, int duration, int paceLow, int paceHigh) {
         this.path = path;
         this.title = title;
         this.duration = duration;
         this.paceLow = paceLow;
         this.paceHigh = paceHigh;
     }
-
+    public AudioModel(String path, String title, int duration) {
+        this.path = path;
+        this.title = title;
+        this.duration = duration;
+    }
     public String getPath() {
         return path;
     }
@@ -36,11 +40,11 @@ public class AudioModel implements Serializable {
         this.title = title;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
