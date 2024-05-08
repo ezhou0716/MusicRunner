@@ -68,8 +68,10 @@ public class MusicListActivity extends AppCompatActivity {
         double avgBpm = 0.0;
         try{
             while((line = reader.readLine()) != null){
+
                 String [] fields  = line.split(",");
                 songs.add(new Song(fields[4], Integer.parseInt(fields[3]), Integer.parseInt(fields[2]), fields[0], fields[1]));
+                Log.w("<><><>", "Song added: " + fields[4]);
                 avgBpm += Integer.parseInt(fields[2]);
             }
         }
@@ -93,7 +95,7 @@ public class MusicListActivity extends AppCompatActivity {
 
                 int index = (int)(iTotal/(0.2*time));
                 if(index == 0){
-                    Log.w("<><><>", "I've Made it to the");
+                    Log.w("<><><>", "I've Made it to 0.2 of the time");
                     double instantSpeed = 0.982*speed;
                     instantSpeed += iTotal%(0.2*time)*0.19;
                     double proportion = (instantSpeed - 0.993)/range;
@@ -119,6 +121,7 @@ public class MusicListActivity extends AppCompatActivity {
                      // duration will be reset
                     AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
                     songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
                     iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
 
@@ -148,6 +151,7 @@ public class MusicListActivity extends AppCompatActivity {
                     }
                     AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
                     songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
                     iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
@@ -173,6 +177,11 @@ public class MusicListActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
+                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
                 }
                 else if (index == 3) {
                     double instantSpeed = 0.993*speed;
@@ -225,6 +234,7 @@ public class MusicListActivity extends AppCompatActivity {
                     }
                     AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
                     songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
                     iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
