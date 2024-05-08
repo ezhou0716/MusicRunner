@@ -95,11 +95,13 @@ public class MusicListActivity extends AppCompatActivity {
 
                 int index = (int)(iTotal/(0.2*time));
                 if(index == 0){
-                    Log.w("<><><>", "I've Made it to 0.2 of the time");
+                    Log.w("<><><>", "I've Made it to 0.0 of the time");
                     double instantSpeed = 0.982*speed;
                     instantSpeed += iTotal%(0.2*time)*0.19;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = (instantSpeed - 0.993)/range;
                     double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 10));
                     int min = (int) Math.round((instantBpm - 5));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1));
@@ -128,11 +130,13 @@ public class MusicListActivity extends AppCompatActivity {
 
                 }
                 else if (index == 1) {
+                    Log.w("<><><>", "I've Made it to 0.2 of the time");
                     double instantSpeed = 1.020*speed;
                     instantSpeed -= iTotal%(0.2*time)*0.105;
-                    Log.w("<><><>", "I've Made it to 0.2 of the time");
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = (instantSpeed - 0.993)/range;
                     double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 10));
                     int min = (int) Math.round((instantBpm - 5));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1));
@@ -156,11 +160,14 @@ public class MusicListActivity extends AppCompatActivity {
                     tentativeSongs.remove(smallIndex);
                 }
                 else if (index == 2) {
+                    Log.w("<><><>", "I've Made it to 0.4 of the time");
                     double instantSpeed = 0.999*speed;
                     instantSpeed -= iTotal%(0.2*time)*0.03;
-                    Log.w("<><><>", "I've Made it to 0.4 of the time");
+                    double proportionSpeed = 0.999 - iTotal%(0.2)*0.03;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = (instantSpeed - 0.993)/range;
                     double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 10));
                     int min = (int) Math.round((instantBpm - 5));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1));
@@ -186,9 +193,12 @@ public class MusicListActivity extends AppCompatActivity {
                 else if (index == 3) {
                     double instantSpeed = 0.993*speed;
                     instantSpeed -= iTotal%(0.2*time)*0.04;
+                    double proportionSpeed = 0.993 - iTotal%(0.2)*0.04;
                     Log.w("<><><>", "I've Made it to 0.6 of the time");
-                    double proportion = (instantSpeed - 0.993)/range;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    double proportion = (proportionSpeed - 0.993)/range;
                     double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 10));
                     int min = (int) Math.round((instantBpm - 5));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1));
@@ -214,8 +224,10 @@ public class MusicListActivity extends AppCompatActivity {
                     double instantSpeed = 0.985*speed;
                     instantSpeed += iTotal%(0.2*time)*0.195;
                     Log.w("<><><>", "I've Made it to 0.8 of the time");
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = (instantSpeed - 0.993)/range;
                     double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 10));
                     int min = (int) Math.round((instantBpm - 5));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1));
