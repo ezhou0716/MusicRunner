@@ -490,7 +490,7 @@ public class MusicListActivity extends AppCompatActivity {
                     double proportion = instantSpeed/speed;
                     double instantBpm = ((instantSpeed - 0.9392*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9392*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -523,8 +523,8 @@ public class MusicListActivity extends AppCompatActivity {
                     instantSpeed -= ((iTotal/time)%(0.2)*0.221) * speed;
                     Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    double instantBpm = ((instantSpeed - .9392*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9392*speed)/(range));
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
@@ -556,9 +556,9 @@ public class MusicListActivity extends AppCompatActivity {
                     double instantSpeed = 1.0055*speed;
                     instantSpeed -= ((iTotal/time)%(0.2)*0.0331) * speed;
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9392*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9392*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -589,11 +589,11 @@ public class MusicListActivity extends AppCompatActivity {
                     instantSpeed -= ((iTotal/time)%(0.2)*0.0221) * speed;
                     Log.w("<><><>", "I've Made it to 0.6 of the time");
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9392*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     //bpm range  += 2*(Speed)
                     //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9392*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -624,11 +624,11 @@ public class MusicListActivity extends AppCompatActivity {
                     instantSpeed -= ((iTotal/time)%(0.2)*0.0111) * speed;
                     Log.w("<><><>", "I've Made it to 0.8 of the time");
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9392*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     //bpm range  += 2*(Speed)
                     //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9392*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -680,9 +680,9 @@ public class MusicListActivity extends AppCompatActivity {
                     double instantSpeed = 0.9285*speed;
                     instantSpeed += ((iTotal/time)%(0.2)*0.0535) * speed;
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.9392*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9285*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9285*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -715,8 +715,8 @@ public class MusicListActivity extends AppCompatActivity {
                     instantSpeed += ((iTotal/time)%(0.2)*0.1105) * speed;
                     Log.w("<><><>", "Instant Speed: " + instantSpeed);
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    double instantBpm = ((instantSpeed - .9285*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9285*speed)/(range));
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
@@ -748,9 +748,9 @@ public class MusicListActivity extends AppCompatActivity {
                     double instantSpeed = 0.9724*speed;
                     instantSpeed += ((iTotal/time)%(0.2)*0.1655) * speed;
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9285*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9285*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -778,14 +778,14 @@ public class MusicListActivity extends AppCompatActivity {
                 }
                 else if (index == 3) {
                     double instantSpeed = 1.0055*speed;
-                    instantSpeed -= ((iTotal/time)%(0.2)*0.221) * speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.221) * speed;
                     Log.w("<><><>", "I've Made it to 0.6 of the time");
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9285*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     //bpm range  += 2*(Speed)
                     //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9285*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -813,14 +813,14 @@ public class MusicListActivity extends AppCompatActivity {
                 }
                 else if (index == 4) {
                     double instantSpeed = 1.0497*speed;
-                    instantSpeed -= ((iTotal/time)%(0.2)*0.1365) * speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.1365) * speed;
                     Log.w("<><><>", "I've Made it to 0.8 of the time");
                     double proportion = instantSpeed/speed;
-                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    double instantBpm = ((instantSpeed - .9285*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
                     //bpm range  += 2*(Speed)
                     //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
-                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - .9285*speed)/(range));
                     int max = (int) Math.round((instantBpm + 4));
                     int min = (int) Math.round((instantBpm - 8));
                     int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
@@ -928,7 +928,7 @@ public class MusicListActivity extends AppCompatActivity {
         }else{
             //recyclerview
             //recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new MusicListAdapter(songsList,getApplicationContext()));
+            recyclerView.setAdapter(new MusicListAdapter(songsList, getApplicationContext()));
         }
     }
 
