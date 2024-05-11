@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+ <?xml version="1.0" encoding="utf-8"?>
+ <!--Home Page of the App, enter Screen -->
+ <!-- In the Home Page, the user will be able to select a running pattern -->
+ <!-- To demonstrate their speed throughout their run, making it easier  -->
+ <!-- To visualize and choose. -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,17 +12,29 @@
     tools:context=".MainActivity"
     android:background="@color/black">
 
+    <!--Text to Introduce User to app -->
     <TextView
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/patterns_text"
+        android:layout_height="50dp"
+        android:text="Welcome! Ready to Run?!"
         android:textColor="#ECAB68"
-        android:text="Select a Running Pattern"
         android:textSize="20dp"
-        android:textStyle="bold"
-        android:padding="30dp"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="bold" />
 
+<!--Text to tell the user to select a Running Pattern -->
+    <TextView
+        android:id="@+id/patterns_text"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="30dp"
+        android:text="Select a Running Pattern"
+        android:textColor="#ECAB68"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    <!--First Running Pattern -->
     <ImageView
         android:layout_width="240dp"
         android:layout_height="120dp"
@@ -27,7 +43,7 @@
         android:padding="20dp"
         android:layout_below="@id/patterns_text"
         android:src="@drawable/pattern1"/>
-
+    <!--Second Running Pattern -->
     <ImageView
         android:layout_width="240dp"
         android:layout_height="120dp"
@@ -36,7 +52,7 @@
         android:padding="20dp"
         android:layout_below="@id/pattern1"
         android:src="@drawable/pattern2"/>
-
+    <!--Third Running Pattern -->
     <ImageView
         android:layout_width="240dp"
         android:layout_height="120dp"
@@ -45,7 +61,7 @@
         android:padding="20dp"
         android:layout_below="@id/pattern2"
         android:src="@drawable/pattern3"/>
-
+    <!--Fourth Running Pattern -->
     <ImageView
         android:layout_width="240dp"
         android:layout_height="120dp"
