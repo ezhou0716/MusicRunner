@@ -79,7 +79,9 @@ public class MusicListActivity extends AppCompatActivity {
             Log.wtf("MainActivity", "Error reading data on line: " + line);
         }
         avgBpm /= songs.size();
-        int bpmRange = (songs.get(songs.size()-1).getBpm() - songs.get(0).getBpm());
+        int bpmRange = (songs.get(songs.size()-1).getBpm() - songs.get(0).getBpm())-40;
+        Log.w("<><><>", "bpmRange: " + bpmRange);
+        int bpmMin  = songs.get(0).getBpm() + 2*speed;
         double time = distance * 60.0 / speed;
         if(pid == 1){
             /* For 0 t < 0.2 slope: .19
@@ -88,29 +90,32 @@ public class MusicListActivity extends AppCompatActivity {
                For 0.6 < t < 0.8 slope: -0.04
                For 0.8 < t < 1 slope: 0.195
              */
-            double range = 1.024 - .993;
+            double range = (1.024 - .982)*speed;
+            Log.w("<><><>", "Range: " + range);
             double iTotal = 0.0;
             ArrayList<Song> tentativeSongs = new ArrayList<>(songs);
             while(iTotal < time){
-
+                if(tentativeSongs.isEmpty()){
+                    Log.w("<><><>", "No more songs in list");
+                    break;
+                }
                 int index = (int)(iTotal/(0.2*time));
                 if(index == 0){
-                    Log.w("<><><>", "I've Made it to 0.0 of the time");
                     double instantSpeed = 0.982*speed;
-                    instantSpeed += iTotal%(0.2*time)*0.19;
-                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
-                    double proportion = (instantSpeed - 0.993)/range;
-                    double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    instantSpeed += ((iTotal/time)%(0.2)*0.19) * speed;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    int max = (int) Math.round((instantBpm + 10));
-                    int min = (int) Math.round((instantBpm - 5));
-                    int chosenBPM = (int)(Math.random() * ((max - min) + 1));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 8));
+                    int min = (int) Math.round((instantBpm - 4));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
                     int smallIndex = 0;
-                    for(int i = 0; i < songs.size(); i ++){
-                        if(Math.abs(songs.get(i).getBpm() - chosenBPM) < Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
                             smallIndex = i;
                         }
-                        else if(Math.abs(songs.get(i).getBpm() - chosenBPM) > Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
                             break;
                         }
                         else{//same diff, choses one by random
@@ -121,137 +126,152 @@ public class MusicListActivity extends AppCompatActivity {
                         }
                     }
                      // duration will be reset
-                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
                     songsList.add(songData);
-                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
-                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
-
 
                 }
                 else if (index == 1) {
                     Log.w("<><><>", "I've Made it to 0.2 of the time");
                     double instantSpeed = 1.020*speed;
-                    instantSpeed -= iTotal%(0.2*time)*0.105;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.105) * speed;
                     Log.w("<><><>", "Instant Speed: " + instantSpeed);
-                    double proportion = (instantSpeed - 0.993)/range;
-                    double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    int max = (int) Math.round((instantBpm + 10));
-                    int min = (int) Math.round((instantBpm - 5));
-                    int chosenBPM = (int)(Math.random() * ((max - min) + 1));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
                     int smallIndex = 0;
-                    for(int i = 0; i < songs.size(); i ++) {
-                        if (Math.abs(songs.get(i).getBpm() - chosenBPM) < Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting smaller
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
                             smallIndex = i;
-                        } else if (Math.abs(songs.get(i).getBpm() - chosenBPM) > Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting bigger
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
                             break;
-                        } else {//same diff, choses one by random
+                        }
+                        else{//same diff, choses one by random
                             double num = Math.random();
-                            if (num < 0.5) {
+                            if(num < 0.5){
                                 smallIndex = i;
                             }
                         }
                     }
-                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
                     songsList.add(songData);
-                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
-                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
                 else if (index == 2) {
                     Log.w("<><><>", "I've Made it to 0.4 of the time");
                     double instantSpeed = 0.999*speed;
-                    instantSpeed -= iTotal%(0.2*time)*0.03;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.03) * speed;
                     double proportionSpeed = 0.999 - iTotal%(0.2)*0.03;
-                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
-                    double proportion = (instantSpeed - 0.993)/range;
-                    double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    int max = (int) Math.round((instantBpm + 10));
-                    int min = (int) Math.round((instantBpm - 5));
-                    int chosenBPM = (int)(Math.random() * ((max - min) + 1));
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
                     int smallIndex = 0;
-                    for(int i = 0; i < songs.size(); i ++) {
-                        if (Math.abs(songs.get(i).getBpm() - chosenBPM) < Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting smaller
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
                             smallIndex = i;
-                        } else if (Math.abs(songs.get(i).getBpm() - chosenBPM) > Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting bigger
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
                             break;
-                        } else {//same diff, choses one by random
+                        }
+                        else{//same diff, choses one by random
                             double num = Math.random();
-                            if (num < 0.5) {
+                            if(num < 0.5){
                                 smallIndex = i;
                             }
                         }
                     }
-                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
                     songsList.add(songData);
-                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
-                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
                 else if (index == 3) {
                     double instantSpeed = 0.993*speed;
-                    instantSpeed -= iTotal%(0.2*time)*0.04;
-                    double proportionSpeed = 0.993 - iTotal%(0.2)*0.04;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.04) * speed;
                     Log.w("<><><>", "I've Made it to 0.6 of the time");
-                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
-                    double proportion = (proportionSpeed - 0.993)/range;
-                    double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    int max = (int) Math.round((instantBpm + 10));
-                    int min = (int) Math.round((instantBpm - 5));
-                    int chosenBPM = (int)(Math.random() * ((max - min) + 1));
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
                     int smallIndex = 0;
-                    for(int i = 0; i < songs.size(); i ++) {
-                        if (Math.abs(songs.get(i).getBpm() - chosenBPM) < Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting smaller
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
                             smallIndex = i;
-                        } else if (Math.abs(songs.get(i).getBpm() - chosenBPM) > Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting bigger
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
                             break;
-                        } else {//same diff, choses one by random
+                        }
+                        else{//same diff, choses one by random
                             double num = Math.random();
-                            if (num < 0.5) {
+                            if(num < 0.5){
                                 smallIndex = i;
                             }
                         }
                     }
-                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
                     songsList.add(songData);
-                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
                 else if (index == 4) {
                     double instantSpeed = 0.985*speed;
-                    instantSpeed += iTotal%(0.2*time)*0.195;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.195) * speed;
                     Log.w("<><><>", "I've Made it to 0.8 of the time");
-                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
-                    double proportion = (instantSpeed - 0.993)/range;
-                    double instantBpm = (proportion*bpmRange)+ songs.get(0).getBpm();
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
                     Log.w("<><><>", "Instant BPM: " + instantBpm);
-                    int max = (int) Math.round((instantBpm + 10));
-                    int min = (int) Math.round((instantBpm - 5));
-                    int chosenBPM = (int)(Math.random() * ((max - min) + 1));
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 8));
+                    int min = (int) Math.round((instantBpm - 4));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
                     int smallIndex = 0;
-                    for(int i = 0; i < songs.size(); i ++) {
-                        if (Math.abs(songs.get(i).getBpm() - chosenBPM) < Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting smaller
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
                             smallIndex = i;
-                        } else if (Math.abs(songs.get(i).getBpm() - chosenBPM) > Math.abs(songs.get(smallIndex).getBpm() - chosenBPM)) { //diff is getting bigger
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
                             break;
-                        } else {//same diff, choses one by random
+                        }
+                        else{//same diff, choses one by random
                             double num = Math.random();
-                            if (num < 0.5) {
+                            if(num < 0.5){
                                 smallIndex = i;
                             }
                         }
                     }
-                    AudioModel songData = new AudioModel(songs.get(smallIndex).getPath(), songs.get(smallIndex).getTitle(),songs.get(smallIndex).getDuration());
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
                     songsList.add(songData);
-                    Log.w("<><><>", "playlist song added: " + songs.get(smallIndex).getTitle());
-                    iTotal += (double) songs.get(smallIndex).getDuration() /(1000*60);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
                     tentativeSongs.remove(smallIndex);
                 }
                 else{
-                    double instantSpeed = 1.024*speed;
                     break;
                 }
             }
@@ -264,6 +284,188 @@ public class MusicListActivity extends AppCompatActivity {
                For 0.6 < t < 0.8 slope: -0.1615
                For 0.8 < t < 1 slope: -0.1615
              */
+            double range = (1.0764 - .9367)*speed;
+            double iTotal = 0.0;
+            ArrayList<Song> tentativeSongs = new ArrayList<>(songs);
+            while(iTotal < time){
+                if(tentativeSongs.isEmpty()){
+                    Log.w("<><><>", "No more songs in list");
+                    break;
+                }
+                int index = (int)(iTotal/(0.2*time));
+                if(index == 0){
+                    double instantSpeed = 0.9367*speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.001) * speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9365*speed)/(range))*(bpmRange) + bpmMin;
+                    int max = (int) Math.round((instantBpm + 8));
+                    int min = (int) Math.round((instantBpm - 4));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    Log.w("<><><>", "Chosen BPM: " + chosenBPM);
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+
+                }
+                else if (index == 1) {
+                    Log.w("<><><>", "I've Made it to 0.2 of the time");
+                    double instantSpeed = .9365*speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.215) * speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    double proportion = instantSpeed/speed;
+                    //bpm range is the range - 40
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    double instantBpm = ((instantSpeed - 0.9365*speed)/(range))*(bpmRange) + bpmMin;
+                    int max = (int) Math.round((instantBpm + 8));
+                    int min = (int) Math.round((instantBpm - 4));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    Log.w("<><><>", "Chosen BPM: " + chosenBPM);
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 2) {
+                    Log.w("<><><>", "I've Made it to 0.4 of the time");
+                    double instantSpeed = .9795*speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    instantSpeed += ((iTotal/time)%(0.2)*0.4845) * speed;
+                    //double proportionSpeed = 0.999 - iTotal%(0.2)*0.03;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9365*speed)/(range))*(bpmRange) + bpmMin;
+                    int max = (int) Math.round((instantBpm + 8));
+                    int min = (int) Math.round((instantBpm - 4));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    Log.w("<><><>", "Chosen BPM: " + chosenBPM);
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 3) {
+                    double instantSpeed = 1.0764*speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.1516) * speed;
+                    Log.w("<><><>", "I've Made it to 0.6 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9365*speed)/(range))*(bpmRange) + bpmMin;
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    Log.w("<><><>", "Chosen BPM: " + chosenBPM);
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 4) {
+                    double instantSpeed = 1.0441*speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.1615) * speed;
+                    Log.w("<><><>", "I've Made it to 0.8 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9365*speed)/(range))*(bpmRange) + bpmMin;
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    Log.w("<><><>", "Chosen BPM: " + chosenBPM);
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else{
+                    break;
+                }
+            }
         }
         else if(pid == 3){
             /* For 0 t < 0.2 slope: -0.2765
@@ -272,6 +474,190 @@ public class MusicListActivity extends AppCompatActivity {
                For 0.6 < t < 0.8 slope: -.0221
                For 0.8 < t < 1 slope: -0.0111
              */
+            double range = (1.105 - .9392)*speed;
+            Log.w("<><><>", "Range: " + range);
+            double iTotal = 0.0;
+            ArrayList<Song> tentativeSongs = new ArrayList<>(songs);
+            while(iTotal < time){
+                if(tentativeSongs.isEmpty()){
+                    Log.w("<><><>", "No more songs in list");
+                    break;
+                }
+                int index = (int)(iTotal/(0.2*time));
+                if(index == 0){
+                    double instantSpeed = 1.105*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.2765) * speed;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9392*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+
+                }
+                else if (index == 1) {
+                    Log.w("<><><>", "I've Made it to 0.2 of the time");
+                    double instantSpeed = 1.0497*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.221) * speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 2) {
+                    Log.w("<><><>", "I've Made it to 0.4 of the time");
+                    double instantSpeed = 1.0055*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.0331) * speed;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 3) {
+                    double instantSpeed = 0.9724*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.0221) * speed;
+                    Log.w("<><><>", "I've Made it to 0.6 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 4) {
+                    double instantSpeed = 0.9503*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.0111) * speed;
+                    Log.w("<><><>", "I've Made it to 0.8 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else{
+                    break;
+                }
+            }
         }
         else{
             /* For 0 t < 0.2 slope: .0535
@@ -280,6 +666,191 @@ public class MusicListActivity extends AppCompatActivity {
                For 0.6 < t < 0.8 slope: .221
                For 0.8 < t < 1 slope: .1365
              */
+            double range = (1.0773 - .9285)*speed;
+            Log.w("<><><>", "Range: " + range);
+            double iTotal = 0.0;
+            ArrayList<Song> tentativeSongs = new ArrayList<>(songs);
+            while(iTotal < time){
+                if(tentativeSongs.isEmpty()){
+                    Log.w("<><><>", "No more songs in list");
+                    break;
+                }
+                int index = (int)(iTotal/(0.2*time));
+                if(index == 0){
+                    double instantSpeed = 0.9285*speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.0535) * speed;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.9392*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+
+                }
+                else if (index == 1) {
+                    Log.w("<><><>", "I've Made it to 0.2 of the time");
+                    double instantSpeed = 0.9503*speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.1105) * speed;
+                    Log.w("<><><>", "Instant Speed: " + instantSpeed);
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 2) {
+                    Log.w("<><><>", "I've Made it to 0.4 of the time");
+                    double instantSpeed = 0.9724*speed;
+                    instantSpeed += ((iTotal/time)%(0.2)*0.1655) * speed;
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 3) {
+                    double instantSpeed = 1.0055*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.221) * speed;
+                    Log.w("<><><>", "I've Made it to 0.6 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else if (index == 4) {
+                    double instantSpeed = 1.0497*speed;
+                    instantSpeed -= ((iTotal/time)%(0.2)*0.1365) * speed;
+                    Log.w("<><><>", "I've Made it to 0.8 of the time");
+                    double proportion = instantSpeed/speed;
+                    double instantBpm = ((instantSpeed - 0.982*speed)/(range))*(bpmRange) + bpmMin;
+                    Log.w("<><><>", "Instant BPM: " + instantBpm);
+                    //bpm range  += 2*(Speed)
+                    //proportion bpm: (((instantSpeed - minSpeed)/(range))*(maxBPM - minBPM)) + minBPM
+                    Log.w("<><><>", "Speed Ratio: " + (instantSpeed - 0.982*speed)/(range));
+                    int max = (int) Math.round((instantBpm + 4));
+                    int min = (int) Math.round((instantBpm - 8));
+                    int chosenBPM = (int)(Math.random() * ((max - min) + 1)) + min;
+                    int smallIndex = 0;
+                    for(int i = 1; i < tentativeSongs.size(); i ++){
+                        if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) < Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting smaller
+                            smallIndex = i;
+                        }
+                        else if(Math.abs(tentativeSongs.get(i).getBpm() - chosenBPM) > Math.abs(tentativeSongs.get(smallIndex).getBpm() - chosenBPM)){ //diff is getting bigger
+                            break;
+                        }
+                        else{//same diff, choses one by random
+                            double num = Math.random();
+                            if(num < 0.5){
+                                smallIndex = i;
+                            }
+                        }
+                    }
+                    // duration will be reset
+                    AudioModel songData = new AudioModel(tentativeSongs.get(smallIndex).getPath(), tentativeSongs.get(smallIndex).getTitle(),tentativeSongs.get(smallIndex).getDuration());
+                    songsList.add(songData);
+                    Log.w("<><><>", "playlist song added: " + tentativeSongs.get(smallIndex).getTitle());
+                    iTotal += (double) tentativeSongs.get(smallIndex).getDuration() /(1000*60);
+                    tentativeSongs.remove(smallIndex);
+                }
+                else{
+                    break;
+                }
+            }
+            
         }
 
 
