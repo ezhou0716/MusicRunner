@@ -14,8 +14,14 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Song list adaptor.
+ */
 public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.ViewHolder>{
 
+    /**
+     * Song list data
+     */
     ArrayList<AudioModel> songsList;
     Context context;
 
@@ -24,23 +30,30 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
         this.context = context;
     }
 
+    /**
+     * Override onCreateViewHolder()
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_item,parent,false);
         return new MusicListAdapter.ViewHolder(view);
     }
 
+    /**
+     * Override onBindViewHolder().
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder( MusicListAdapter.ViewHolder holder, int position) {
         AudioModel songData = songsList.get(position);
         holder.titleTextView.setText(songData.getTitle());
-
-        if(MyMediaPlayer.currentIndex==position){
-            holder.titleTextView.setTextColor(Color.parseColor("#FF0000"));
-        }else{
-            holder.titleTextView.setTextColor(Color.parseColor("#000000"));
-        }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
