@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,33 +28,102 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Music Player Activity
+ */
 public class MusicPlayerActivity extends AppCompatActivity implements SensorEventListener {
 
+    /**
+     * Text views to display title, current time, total time.
+     */
     TextView titleTv,currentTimeTv,totalTimeTv;
+
+    /**
+     * Seekbar for the song progress.
+     */
     SeekBar seekBar;
+
+    /**
+     * Image views for the player buttons and music icon.
+     */
     ImageView pausePlay,nextBtn,previousBtn,musicIcon;
     //TextView stepCountTv;
+
+    /**
+     * Text views to display pace and speed.
+     */
     TextView paceTv, speedTv;
 
+    /**
+     * Sensor manager for step sensor.
+     */
     private SensorManager sensorManager;
+
+    /**
+     * Step sensor
+     */
     private Sensor stepCounterSensor;
 
+    /**
+     * Average distance per step.
+     */
     final static float FEET_PER_STEP = 2.5f; // THIS IS AN AVERAGE
 
     static private int initialCount = -1;
+
+    /**
+     * Step count.
+     */
     static private int stepCount = 0;
+
+    /**
+     * Previous step count.
+     */
     static private int prevCount = 0;
     static private int calculatedCount = 0;
 
+    /**
+     * Previous timestamp.
+     */
     static private long previousTime = -1;
+
+    /**
+     * Previous pace.
+     */
     static private float previousPace = 0.0f;
+
+    /**
+     * Current pace.
+     */
     static private float currentPace = 0.0f;
 
+    /**
+     * Song list
+     */
     ArrayList<AudioModel> songsList;
+
+    /**
+     * Current song.
+     */
     AudioModel currentSong;
+
+    /**
+     * Reference to MediaPlayer instance;
+     */
     MediaPlayer mediaPlayer = MyMediaPlayer.getInstance();
+
+    /**
+     * Used in rotation display of the music icon.
+     */
     int x=0;
 
+    /**
+     * Override activity onCreate().
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +151,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
 
         titleTv.setSelected(true);
 
+        // Check and request step counter permission.
         if(!checkStepCounterPermission()){
             Log.w("<><><>", "About to request step counter Permission.... ");
             requestStepCounterPermission();
@@ -95,8 +166,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
             paceTv.setText("Step Counter not available");
         }
 
+        // Get the song list from intent
         songsList = (ArrayList<AudioModel>) getIntent().getSerializableExtra("LIST");
 
+        // Play the current song
         setResourcesWithMusic();
 
         MusicPlayerActivity.this.runOnUiThread(new Runnable() {
@@ -140,6 +213,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
 
     }
 
+    /**
+     * Set resources and play the current song using MediaPlayer.
+     */
     void setResourcesWithMusic(){
         currentSong = songsList.get(MyMediaPlayer.currentIndex);
 
@@ -157,16 +233,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         float speed = currentPace * 60 * FEET_PER_STEP / 5280.0f;
         speedTv.setText(String.format(java.util.Locale.US, "Speed: %.1f mph", speed));
 
+        // Play music
         playMusic();
-
-
     }
 
 
+    /**
+     * Play music using MediaPlayer.
+     */
     private void playMusic(){
 
         mediaPlayer.reset();
         try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(currentSong.getPath());
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -180,24 +259,33 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
 
     }
 
+    /**
+     * Play the next song on the list
+     */
     private void playNextSong(){
 
         if(MyMediaPlayer.currentIndex== songsList.size()-1)
             return;
         MyMediaPlayer.currentIndex +=1;
-        mediaPlayer.reset();
+//        mediaPlayer.reset();
         setResourcesWithMusic();
 
     }
 
+    /**
+     * Play the previous song on the list
+     */
     private void playPreviousSong(){
         if(MyMediaPlayer.currentIndex== 0)
             return;
         MyMediaPlayer.currentIndex -=1;
-        mediaPlayer.reset();
+//        mediaPlayer.reset();
         setResourcesWithMusic();
     }
 
+    /**
+     * Pause playing.
+     */
     private void pausePlay(){
         if(mediaPlayer.isPlaying())
             mediaPlayer.pause();
@@ -206,6 +294,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
     }
 
 
+    /**
+     * Convert duration from Long to String format "MM:SS".
+     * @param duration
+     * @return
+     */
     public static String convertToMMSS(String duration){
         Long millis = Long.parseLong(duration);
         return String.format("%02d:%02d",
@@ -213,12 +306,21 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
     }
 
+    /**
+     * Current milliseconds to String format "MM:SS"
+     * @param millis
+     * @return
+     */
     public static String convertToMMSS(int millis){
         return String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
     }
 
+    /**
+     * Returns true if the app has ACTIVITY_RECOGNITION permission.
+     * @return
+     */
     boolean checkStepCounterPermission() {
         int result = ContextCompat.checkSelfPermission(MusicPlayerActivity.this, android.Manifest.permission.ACTIVITY_RECOGNITION);
         if (result == PackageManager.PERMISSION_GRANTED) {
@@ -229,6 +331,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * Request ACTIVITY_RECOGNITION permission.
+     */
     void requestStepCounterPermission() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(MusicPlayerActivity.this, android.Manifest.permission.ACTIVITY_RECOGNITION)){
             Log.w("<><><>", "shouldShowRequestPermissionRationale...");
@@ -240,6 +345,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * Triggered by step sensor
+     * @param event the {@link android.hardware.SensorEvent SensorEvent}.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
@@ -308,11 +417,17 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
 
     }
 
+    /**
+     * Override SensorEventListener.OnAccuracyChanged().
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
+    /**
+     * Override Activity onStop()
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -322,6 +437,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * Override Activity onResume()
+     */
     @Override
     protected void onResume() {
         super.onResume();

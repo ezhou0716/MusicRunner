@@ -32,21 +32,63 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.Arrays;
 
-public class PlotActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+/**
+ *  Plot activity of this app.
+ */
+public class PlotActivity extends AppCompatActivity {
 
+    /**
+     * XYPlot view of the selected speed and distance
+     */
     private XYPlot plot;
+
+    /**
+     * Button to generate play list (the next page)
+     */
     private Button buGPL;
+
+    /**
+     * The button to set speed and distance.
+     */
     private Button buSet;
+
+    /**
+     * Text view to display currently selected speed.
+     */
     private TextView speedTv;
+
+    /**
+     * Text view to display currently selected distance.
+     */
     private TextView distanceTv;
 
+    /**
+     * Dialog view to select speed and distance.
+     */
     private static Dialog dialog;
 
+    /**
+     * Current selected speed.
+     */
     private static int speed = 7;
+
+    /**
+     * Current selected distance.
+     */
     private static int distance = 5;
 
+    /**
+     * Current selected pattern ID.
+     */
     private static int pid;
 
+    /**
+     * Override Activity.onCreate().
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +138,9 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
         drawPlot();
     }
 
+    /**
+     * Redraw the plot based on currently selected speed and distance and pattern id.
+     */
     public void drawPlot() {
 
         speedTv.setText("Avg Speed: " + speed + " (mph)");
@@ -219,6 +264,10 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
         // redraw
         plot.redraw();
     }
+
+    /**
+     * Pop up a dialog to set distance and speed.
+     */
     public void setSpeedAndDistance() {
         dialog = new Dialog(PlotActivity.this);
         dialog.setTitle("Set Speed and Distance");
@@ -270,10 +319,5 @@ public class PlotActivity extends AppCompatActivity implements NumberPicker.OnVa
         });
 
         dialog.show();
-    }
-
-    @Override
-    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-
     }
 }
