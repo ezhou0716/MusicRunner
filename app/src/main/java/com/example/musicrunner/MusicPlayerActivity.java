@@ -233,6 +233,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
         float speed = currentPace * 60 * FEET_PER_STEP / 5280.0f;
         speedTv.setText(String.format(java.util.Locale.US, "Speed: %.1f mph", speed));
 
+        mediaPlayer.setOnCompletionListener(mp -> playNextSong());
         // Play music
         playMusic();
     }
