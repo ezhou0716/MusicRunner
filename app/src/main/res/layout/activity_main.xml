@@ -78,6 +78,6 @@
         android:layout_below="@id/pattern4"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
-        app:srcCompat="@drawable/RunningFigure2"/>
+        app:srcCompat="@drawable/runningfigure2"/>
 
 </RelativeLayout>
