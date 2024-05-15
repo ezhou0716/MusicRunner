@@ -386,7 +386,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
                     Log.i("<><><>", "Check song with previous pace: " + previousPace + " and current pace : " + currentPace);
 
                     // check if current song in the range
-                    if (!currentSong.inPaceRange(previousPace) && !currentSong.inPaceRange(currentPace)) {
+                   /* if (!currentSong.inPaceRange(previousPace) && !currentSong.inPaceRange(currentPace)) {
                         // twice pace out of range, consider switching songs.
                         // use current pace as standard
 
@@ -406,6 +406,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SensorEven
                             }
                         }
                     }
+                    */
 
                     previousPace = currentPace;
                 }

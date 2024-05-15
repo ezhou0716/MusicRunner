@@ -99,9 +99,9 @@ public class MusicListActivity extends AppCompatActivity {
             Log.wtf("MainActivity", "Error reading data on line: " + line);
         }
         avgBpm /= songs.size();
-        int bpmRange = (songs.get(songs.size()-1).getBpm() - songs.get(0).getBpm())-40;
+        int bpmRange = (songs.get(songs.size()-1).getBpm() - songs.get(0).getBpm())-21;
         Log.w("<><><>", "bpmRange: " + bpmRange);
-        int bpmMin  = songs.get(0).getBpm() + 2*speed;
+        int bpmMin  = songs.get(0).getBpm() + 3*(speed-7);
         double time = distance * 60.0 / speed;
         // For pattern 1
         if(pid == 1){
